@@ -14,7 +14,7 @@ public class Dictionary{
     public String lookUp(String key){
 	int index = words.indexOf(key);
 	if (index == -1)
-	    return null;
+	    return key;
 	return definitions.get(index);
 	       
 
