@@ -12,11 +12,11 @@ public enum Cardinal{
 	return val;
     }
 
-    public Cardinal turnRight(){
+    public Cardinal right(){
 	return this.ordinal() < 3 ? Cardinal.values()[this.ordinal() +1] : Cardinal.values()[0];
     }
 
-    public Cardinal turnLeft(){
+    public Cardinal left(){
 	return this.ordinal() > 0 ? Cardinal.values()[this.ordinal() -1] : Cardinal.values()[3];
     }
 
