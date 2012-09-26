@@ -1,5 +1,8 @@
-import java.awt.image.*;
+import java.io.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import javax.imageio.*;
 import javax.swing.*;
 
 public class Pen{
@@ -7,6 +10,7 @@ public class Pen{
     private int x,y;
     private String instructions;
     private Cardinal direction = Cardinal.NORTH;
+    private Graphics g;
 
     public int stepSize = 1;
     public int red = 255;
@@ -16,6 +20,7 @@ public class Pen{
     public int greenShift = 0;
     public int blueShift = 0;
     public Color color = new Color(red, green, blue);
+    
 
     public Pen(int x, int y, String instructions){
 	this.x = x;
@@ -23,23 +28,48 @@ public class Pen{
 	this.instructions = instructions;	
     }
 
+    public void draw(){
+	createImage("dragon");
+    }
+
+
+    private BufferedImage createImage(String fileName) throws IOException{
+	BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+	img.createGraphics();
+	this.g = img.createGraphics();
+	g.setColor(color);
+
+	//do actions
+	Pen.writeImage(img, fileName);
+
+	return img;
+    }
+
+    private static void writeImage(BufferedImage image, String fileName) throws IOException{
+	if (fileName == null) return;
+
+	int offset = fileName.lastIndexOf(".");
+	String type = offset == -1? "bmp" : fileName.substring(offset + 1);
+
+	ImageIO.write(image, type, new File(fileName));
+
+
+    }
+
+
     private void forward(){
 	int[] dxy = Cardinal.NORTH.getValue();
+
+	red = (red + redShift)%255;
+	green = (green + greenShift)%255;
+	blue = (blue + blueShift)%255;
+	color = new Color(red, green, blue);
+
 	for (int i = 0; i < stepSize; i++){
-	    //draw in current position
+	    g.drawLine(x,y,x,y);
 	    x += dxy[0];
 	    y += dxy[1];
 	}
-    }
-
-    private BufferedImage createImage(){
-	BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-	img.createGraphics();
-	Graphics g = img.getGraphics();
-	g.setColor(color);
-
-	//draw according to instructions
-	return null;
     }
 
     private void doInstructions(){
