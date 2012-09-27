@@ -28,18 +28,19 @@ public class Pen{
 	this.instructions = instructions;	
     }
 
-    public void draw(){
+    public void draw() throws Exception{
 	createImage("dragon");
     }
 
 
     private BufferedImage createImage(String fileName) throws IOException{
-	BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+
+	BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 	img.createGraphics();
 	this.g = img.createGraphics();
 	g.setColor(color);
 
-	//do actions
+	doInstructions();
 	Pen.writeImage(img, fileName);
 
 	return img;
@@ -52,11 +53,7 @@ public class Pen{
 	String type = offset == -1? "bmp" : fileName.substring(offset + 1);
 
 	ImageIO.write(image, type, new File(fileName));
-
-
     }
-
-
     private void forward(){
 	int[] dxy = Cardinal.NORTH.getValue();
 
@@ -66,12 +63,11 @@ public class Pen{
 	color = new Color(red, green, blue);
 
 	for (int i = 0; i < stepSize; i++){
-	    g.drawLine(x,y,x,y);
+	    g.drawLine(x,y,x+1,y+1);
 	    x += dxy[0];
 	    y += dxy[1];
 	}
     }
-
     private void doInstructions(){
 	for (int i = 0; i < instructions.length(); i++){
 	    char c = instructions.charAt(i);

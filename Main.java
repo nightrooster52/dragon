@@ -6,9 +6,11 @@ public class Main{
 	;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 	String instructions = dragon();
-	Pen pen = new Pen(0, 0, instructions);
+	Pen pen = new Pen(500, 500, instructions);
+
+	pen.draw();
 
     }
 
@@ -17,7 +19,7 @@ public class Main{
 	Dictionary dict = new Dictionary();
 	dict.takeRule("X", "X+YF");
 	dict.takeRule("Y", "FX-Y");
-	return instructions(dict, axiom, 5);
+	return instructions(dict, axiom, 10);
     }
 
     public static String instructions(Dictionary dict, String axiom, int iterations){
