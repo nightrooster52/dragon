@@ -14,8 +14,8 @@ public class Pen{
 
   public int stepSize = 1;
   public float red = 255;
-  public float green = 255;
-  public float blue = 255;
+  public float green = 122;
+  public float blue = 0;
   private float redBuff = 0;
   private float greenBuff = 0;
   private float blueBuff = 0;
@@ -38,7 +38,7 @@ public class Pen{
 
   private BufferedImage createImage(String fileName) throws IOException{
 
-    BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+    BufferedImage img = new BufferedImage(1000, 1200, BufferedImage.TYPE_INT_RGB);
     img.createGraphics();
     this.g = img.createGraphics();
     g.setColor(color);
@@ -62,7 +62,7 @@ public class Pen{
     redBuff+=redShift;
     greenBuff += greenShift;
     blueBuff += blueShift;
-    color = new Color((int)(red+redBuff)%255, (int)(green+greenBuff)%255, (int)(blue+blueBuff)%255);
+    color = new Color((int)(red+redBuff)%256, (int)(green+greenBuff)%256, (int)(blue+blueBuff)%256);
     g.setColor(color);
 
     for (int i = 0; i < stepSize; i++){
@@ -73,13 +73,16 @@ public class Pen{
   }
   private void doInstructions(){
     for (int i = 0; i < instructions.length(); i++){
-      System.out.println(i/instructions.length());
+      System.out.println(((float)i)/instructions.length());
       char c = instructions.charAt(i);
       switch(c){
 
-      case 'F':  forward(); break;
-      case '-': direction = direction.left(); break;
-      case '+': direction = direction.right(); break;
+      case 'F':  
+	forward(); break;
+      case '-': 
+	direction = direction.left(); break;
+      case '+': 
+	direction = direction.right(); break;
       default: break;
 
       }
