@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.lang.Character;
 import java.io.*;
 import java.nio.*;
@@ -9,28 +10,41 @@ public class Main{
   }
 
   public static void main(String[] args) throws Exception{
-    /*
-    for (int i = 18; i < 24; i++){
-      String instructions = dragon(i);
-      String title = "dragon" + i +".txt";
-      saveInstructions(instructions, title);
-
-    }
-    */
-    String instructions = readInstructions("dragon19.txt");
     
-    Pen pen = new Pen(750, 400, instructions);
-    pen.red = 120;
-    pen.green = 5;
-    pen.blue = 00;
-    pen.redShift = (float)0.005;
-    pen.greenShift = (float)0.005;
-    pen.blueShift = (float)0.0004;
+    
+    boolean[] bInstructions = efficientDragon(17); //iterations
+    
+    //starting x, starting y, instructions
+    Pen pen = new Pen(600, 370, bInstructions);
+
+    //starting colors
+    pen.red = 255;
+    pen.green = 0;
+    pen.blue = 255;
+
+
+    //shift is per entire dragon
+    //-1 subtracts 255 over the course of the dragon
+    //2 would add 255 twice over the course of the dragon
+    pen.redShift = (double)-1;
+    pen.greenShift = (double)0;
+    pen.blueShift = (double)-1;
 
     pen.draw();
     
-
   }
+
+  /* sunset dragon settings
+    //starting colors
+    pen.red = 255;
+    pen.green = 120;
+    pen.blue = 0;
+    //shift is per entire dragon
+
+    pen.redShift = (double)-1;
+    pen.greenShift = (double)-1;
+    pen.blueShift = (double)4;
+  */
   public static void saveInstructions(String text, String title) throws IOException{
     Writer output = null;
     File file = new File(title);
@@ -51,15 +65,39 @@ public class Main{
     }
     return stringBuilder.toString();
   }
-
-
   public static String dragon(int iterations){
     String axiom = "FX";
+    return dragon(iterations, axiom);
+  }
+
+
+  public static String dragon(int iterations, String axiom){
     Dictionary dict = new Dictionary();
     dict.takeRule("X", "X+YF");
     dict.takeRule("Y", "FX-Y");
     return instructions(dict, axiom, iterations);
   }
+  //lets do recursion
+
+  public static boolean[] efficientDragon(int iterations){
+    boolean[] axiom = {true};
+    return efficientDragon(iterations, axiom);
+  }
+
+  public static boolean[] efficientDragon(int iterations, boolean[] axiom){ 
+
+    boolean[] instructions = Arrays.copyOf(axiom, (axiom.length*2+1));
+
+    instructions[axiom.length] = true;
+    for (int i = 1; i < axiom.length; i++){
+      instructions[(axiom.length+i)] = !axiom[axiom.length-(i)];
+      System.out.println(((float)i)/axiom.length + iterations);
+    }
+    iterations--;
+    if (iterations >= 0) instructions = efficientDragon(iterations, instructions);
+    return instructions;      
+  }
+
 
   public static String instructions(Dictionary dict, String axiom, int iterations){
     String instructions = axiom;
@@ -67,7 +105,7 @@ public class Main{
     for (int i = 0; i<iterations; i++){
       for (int j = 0; j<instructions.length(); j++){
         nextResult += (dict.lookUp(Character.toString(instructions.charAt(j))));
-        //System.out.println(((float)j)/instructions.length());
+        System.out.println(((float)j)/instructions.length());
       }
       instructions = nextResult;
       nextResult = "";
